@@ -10,8 +10,7 @@ $ echo "ubuntu ALL=(ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/ubuntu
 user-session=ubuntu
 greeter-show-manual-login=true
 </pre></code>
-
-vi /root/.profile
+/root/.profile
 <pre><code>
 tty -s && mesg n
 </pre></code>
