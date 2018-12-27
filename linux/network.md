@@ -1,4 +1,4 @@
-## Static IP address of **ubuntu**
+## [Ubuntu] static address  
 <pre><code>
 # vi /etc/network/interfaces
 auto enp0s3
@@ -10,7 +10,7 @@ gateway 10.0.2.2
 dns-nameserver 8.8.8.8
 </pre></code>
 
-## Static IP address of **CentOS**
+## [CentOS] static addres
 <pre><code>
 # vi  /etc/sysconfig/network-scripts/ifcfg-enp0s29u1u2
 TYPE=Ethernet
