@@ -23,7 +23,7 @@ GATEWAY=10.55.195.254
 DNS1=8.8.8.8
 </pre></code>
 
-## restart network service
+## Restart network service
 <pre><code>
 # service network restart
 </pre></code>
@@ -32,4 +32,9 @@ DNS1=8.8.8.8
 <pre><code>
 # route add default gw 192.168.1.254
 # ip route add default via 192.168.1.25
+</pre></code>
+
+## DHCP Client 로 IP 할당
+<pre><code>
+$ sudo dhclient -v enp0s8
 </pre></code>
