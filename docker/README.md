@@ -1,4 +1,4 @@
-# Container의 DNS 등록
+## Container의 DNS 등록
 
 <pre><code>
 # /etc/default/docker
