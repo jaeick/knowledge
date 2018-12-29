@@ -37,6 +37,11 @@
   timeout = 1.0
 </pre></code>
 
+## start service
+<pre><code>
+# systemctl start telegraf
+</pre></code>
+
 # Grafana
 
 ## Install
@@ -47,6 +52,6 @@
 # systemctl start grafana-server
 </pre></code>
 
-http://localhost:3000
+http://localhost:3000 (admin/admin)
 
 
