@@ -17,43 +17,24 @@
 # apt-get install iputils-ping
 </pre></code>
 
-## global config
+## /etc/telegraf/telegraf.conf
 <pre><code>
-# grep -v "#" telegraf.conf | grep -v ^$
+[agent]
+  interval = "1s"
+  flush_interval = "1s"
+
 [[outputs.influxdb]]
   urls = ["http://127.0.0.1:8086"]
   database = "telegraf"
   retention_policy = ""
   write_consistency = "any"
   timeout = "5s"
-</pre></code>
 
-## ping export config
-<pre><code>
-# vi /etc/telegraf/telegraf.d/telegraf_ping.conf 
 [[inputs.ping]]
-  ## List of urls to ping
   urls = ["8.8.8.8","google.com"]
-
-  ## Number of pings to send per collection (ping -c <COUNT>)
   count = 1
-
-  ## Interval, in s, at which to ping. 0 == default (ping -i <PING_INTERVAL>)
-  ## Not available in Windows.
   ping_interval = 1.0
-
-  ## Per-ping timeout, in s. 0 == no timeout (ping -W <TIMEOUT>)
   timeout = 1.0
-
-  ## Total-ping deadline, in s. 0 == no deadline (ping -w <DEADLINE>)
-  # deadline = 10
-
-  ## Interface or source address to send ping from (ping -I <INTERFACE/SRC_ADDR>)
-  ## on Darwin and Freebsd only source address possible: (ping -S <SRC_ADDR>)
-  # interface = ""
-
-  ## Specify the ping executable binary, default is "ping"
-  # binary = "ping"
 </pre></code>
 
 # Grafana
