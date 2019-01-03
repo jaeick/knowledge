@@ -1,0 +1,53 @@
+version: '2'
+
+services:
+
+  ftp:
+    build:
+      context: ./ftp
+      dockerfile: Dockerfile
+    container_name: ftp
+    env_file: ./yapps.env
+    volumes:
+      - /tmp:/tmp
+    ports:
+      - "21:21"
+      - "50001-50010:50001-50010"
+
+  tftp:
+    build:
+      context: ./tftp
+      dockerfile: Dockerfile
+    container_name: tftp
+    volumes:
+      - /tmp:/tmp
+    ports:
+      - "69:69/udp" 
+
+  ntp:
+    build:
+      context: ./ntp
+      dockerfile: Dockerfile
+    container_name: ntp
+    env_file: ./yapps.env
+    ports: 
+      - "123:123/udp"
+
+  radius:
+    build:
+      context: ./radius
+      dockerfile: Dockerfile
+    container_name: radius
+    env_file: ./yapps.env
+    ports:
+      - "1812-1813:1812-1813/udp"
+      - "18120:18120/udp"
+
+  tacacs:
+    build:
+      context: ./tacacs
+      dockerfile: Dockerfile
+    container_name: tacacs
+    env_file: ./yapps.env
+    ports:
+      - "49:49"
