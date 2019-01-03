@@ -1,4 +1,4 @@
-# lshw
+## lshw
 
 <pre><code>
 # lshw -class network -businfo
@@ -18,4 +18,28 @@ pci@0000:83:00.0  ens4f0     network        I350 Gigabit Fiber Network Connectio
 pci@0000:83:00.1  ens4f1     network        I350 Gigabit Fiber Network Connection
 pci@0000:83:00.2  ens4f2     network        I350 Gigabit Fiber Network Connection
 pci@0000:83:00.3  ens4f3     network        I350 Gigabit Fiber Network Connection
+</pre></code>
+
+## lspci
+### install
+<pre><code>
+# yum install pciutils
+</pre><code>
+
+<pre><code>
+# lspci | grep Ether
+02:00.0 Ethernet controller: Intel Corporation Ethernet Controller X710 for 10GbE SFP+ (rev 02)
+02:00.1 Ethernet controller: Intel Corporation Ethernet Controller X710 for 10GbE SFP+ (rev 02)
+02:00.2 Ethernet controller: Intel Corporation Ethernet Controller X710 for 10GbE SFP+ (rev 02)
+02:00.3 Ethernet controller: Intel Corporation Ethernet Controller X710 for 10GbE SFP+ (rev 02)
+04:00.0 Ethernet controller: Intel Corporation I350 Gigabit Network Connection (rev 01)
+04:00.1 Ethernet controller: Intel Corporation I350 Gigabit Network Connection (rev 01)
+04:00.2 Ethernet controller: Intel Corporation I350 Gigabit Network Connection (rev 01)
+04:00.3 Ethernet controller: Intel Corporation I350 Gigabit Network Connection (rev 01)
+0a:00.0 Ethernet controller: Intel Corporation I210 Gigabit Network Connection (rev 03)
+0b:00.0 Ethernet controller: Intel Corporation I210 Gigabit Network Connection (rev 03)
+83:00.0 Ethernet controller: Intel Corporation I350 Gigabit Fiber Network Connection (rev 01)
+83:00.1 Ethernet controller: Intel Corporation I350 Gigabit Fiber Network Connection (rev 01)
+83:00.2 Ethernet controller: Intel Corporation I350 Gigabit Fiber Network Connection (rev 01)
+83:00.3 Ethernet controller: Intel Corporation I350 Gigabit Fiber Network Connection (rev 01)
 </pre></code>
