@@ -5,7 +5,7 @@
 # curl -sL https://repos.influxdata.com/influxdb.key | sudo apt-key add -
 # source /etc/lsb-release
 # echo "deb https://repos.influxdata.com/${DISTRIB_ID,,} ${DISTRIB_CODENAME} stable" | sudo tee /etc/apt/sources.list.d/influxdb.list
-# apt-get update && apt-get install influxdb
+# apt-get update && apt-get install -y influxdb
 # systemctl start influxdb
 </pre></code>
 
@@ -48,7 +48,7 @@
 <pre><code>
 # echo "deb https://packagecloud.io/grafana/stable/debian/ stretch main" | tee /etc/apt/sources.list.d/grafana.list
 # curl https://packagecloud.io/gpg.key | sudo apt-key add -
-# apt-get update || apt-get intsall grafana
+# apt-get update && apt-get intsall -y grafana
 # systemctl start grafana-server
 </pre></code>
 
