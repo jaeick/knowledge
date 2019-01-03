@@ -24,8 +24,9 @@ pci@0000:83:00.3  ens4f3     network        I350 Gigabit Fiber Network Connectio
 ### install
 <pre><code>
 # yum install pciutils
-</pre><code>
+</pre></code>
 
+### use
 <pre><code>
 # lspci | grep Ether
 02:00.0 Ethernet controller: Intel Corporation Ethernet Controller X710 for 10GbE SFP+ (rev 02)
