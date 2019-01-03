@@ -9,3 +9,9 @@
 # chmod +x /usr/local/bin/docker-compose
 # docker-compose --version
 </pre></code>
+
+## run
+<pre><code>
+# docker-compose up -d
+# docker-compose down
+</pre></code>
