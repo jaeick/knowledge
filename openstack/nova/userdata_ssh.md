@@ -2,7 +2,7 @@
 
 <pre><code>
 #cloud-config
-password: ubuntu123
+password: openstack
 chpasswd: { expire: False }
 ssh_pwauth: True
 </pre></code>
