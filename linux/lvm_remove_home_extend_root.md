@@ -155,3 +155,16 @@ log      =internal               bsize=4096   blocks=6400, version=2
 realtime =none                   extsz=4096   blocks=0, rtextents=0
 data blocks changed from 13107200 to 107462656
 </pre></code>
+
+## 확인
+<pre><code>
+[root@localhost ~]# df -Th
+Filesystem              Type      Size  Used Avail Use% Mounted on
+/dev/mapper/centos-root xfs       410G 1009M  409G   1% /
+devtmpfs                devtmpfs   63G     0   63G   0% /dev
+tmpfs                   tmpfs      63G     0   63G   0% /dev/shm
+tmpfs                   tmpfs      63G   10M   63G   1% /run
+tmpfs                   tmpfs      63G     0   63G   0% /sys/fs/cgroup
+/dev/sda1               xfs      1014M  145M  870M  15% /boot
+tmpfs                   tmpfs      13G     0   13G   0% /run/user/0
+</pre></code>
