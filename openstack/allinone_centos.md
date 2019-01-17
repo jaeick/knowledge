@@ -185,9 +185,8 @@ MariaDB [(none)]> EXIT;
 [root@controller ~(keystone)]# openstack endpoint create --region RegionOne placement admin http://controller:8778
 
 [root@controller ~(keystone)]# yum install -y openstack-nova-api openstack-nova-conductor \\ \
-openstack-nova-console openstack-nova-novncproxy \\ \
-openstack-nova-scheduler openstack-nova-placement-api \\ \
-openstack-nova-compute
+openstack-nova-console openstack-nova-novncproxy openstack-nova-scheduler \\ \
+openstack-nova-placement-api openstack-nova-compute
 
 [root@controller ~(keystone)]# vi /etc/nova/nova.conf
 ```
@@ -267,14 +266,12 @@ novncproxy_base_url=http://10.55.195.7:6080/vnc_auto.html
 [root@controller ~(keystone)]# nova-manage cell_v2 list_cells
 
 [root@controller ~(keystone)]# systemctl start openstack-nova-api.service \\ \
-openstack-nova-consoleauth.service openstack-nova-scheduler.service \\ \
-openstack-nova-conductor.service openstack-nova-novncproxy.service \\ \
-libvirtd.service openstack-nova-compute.service
+openstack-nova-scheduler.service openstack-nova-conductor.service \\ \
+openstack-nova-novncproxy.service openstack-nova-compute.service
 
 [root@controller ~(keystone)]# systemctl enable openstack-nova-api.service \\ \
-openstack-nova-consoleauth.service openstack-nova-scheduler.service \\ \
-openstack-nova-conductor.service openstack-nova-novncproxy.service \\ \
-libvirtd.service openstack-nova-compute.service
+openstack-nova-scheduler.service openstack-nova-conductor.service \\ \
+openstack-nova-novncproxy.service openstack-nova-compute.service
 
 [root@controller ~(keystone)]# su -s /bin/sh -c "nova-manage cell_v2 discover_hosts --verbose" nova
 
