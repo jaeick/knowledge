@@ -184,7 +184,7 @@ MariaDB [(none)]> EXIT;
 
 [root@controller ~(keystone)]# openstack endpoint create --region RegionOne placement admin http://controller:8778
 
-[root@controller ~(keystone)]# yum install -y openstack-nova-api openstack-nova-conductor \\ 
+[root@controller ~(keystone)]# yum install -y openstack-nova-api openstack-nova-conductor \\ \
 openstack-nova-console openstack-nova-novncproxy \\ \
 openstack-nova-scheduler openstack-nova-placement-api \\ \
 openstack-nova-compute
