@@ -436,7 +436,6 @@ neutron-l3-agent.service neutron-metadata-agent.service neutron-openvswitch-agen
 | ID                                   | Agent Type         | Host       | Availability Zone | Alive | State | Binary                    |
 +--------------------------------------+--------------------+------------+-------------------+-------+-------+---------------------------+
 | 360a0e64-8911-4d7e-8b4d-21e886e1d34a | L3 agent           | controller | nova              | :-)   | UP    | neutron-l3-agent          |
-| 57408486-6e56-429a-8cfd-80f68f0e52bc | NIC Switch agent   | controller | None              | :-)   | UP    | neutron-sriov-nic-agent   |
 | 7a816347-f329-434f-89e5-a4eab596091d | Metadata agent     | controller | None              | :-)   | UP    | neutron-metadata-agent    |
 | af3df282-b3ad-4ef4-a0c1-0696fb080f29 | DHCP agent         | controller | nova              | :-)   | UP    | neutron-dhcp-agent        |
 | fd66e468-e98a-441a-a9b6-a914526c4323 | Open vSwitch agent | controller | None              | :-)   | UP    | neutron-openvswitch-agent |
