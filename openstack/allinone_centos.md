@@ -442,3 +442,44 @@ neutron-l3-agent.service neutron-metadata-agent.service neutron-openvswitch-agen
 | fd66e468-e98a-441a-a9b6-a914526c4323 | Open vSwitch agent | controller | None              | :-)   | UP    | neutron-openvswitch-agent |
 +--------------------------------------+--------------------+------------+-------------------+-------+-------+---------------------------+
 ```
+
+## Configure Horizon
+
+[root@controller ~(keystone)]# yum install -y openstack-dashboard
+
+[root@controller ~(keystone)]# vi /etc/openstack-dashboard/local_settings 
+```
+ALLOWED_HOSTS = ['*']
+
+OPENSTACK_API_VERSIONS = {
+    "identity": 3,
+    "image": 2,
+    "volume": 2,
+}
+
+OPENSTACK_KEYSTONE_MULTIDOMAIN_SUPPORT = True
+
+OPENSTACK_KEYSTONE_DEFAULT_DOMAIN = 'Default'
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': 'controller:11211',
+    },
+}
+
+OPENSTACK_HOST = "controller"
+OPENSTACK_KEYSTONE_URL = "http://%s:5000/v3" % OPENSTACK_HOST
+OPENSTACK_KEYSTONE_DEFAULT_ROLE = “user"
+
+TIME_ZONE = "Asia/Seoul"
+```
+
+[root@controller ~(keystone)]#  vi /etc/httpd/conf.d/openstack-dashboard.conf
+```
+WSGIDaemonProcess dashboard
+WSGIProcessGroup dashboard
+WSGISocketPrefix run/wsgi
+WSGIApplicationGroup %{GLOBAL}  <- 추가
+```
+[root@vems ~]# systemctl restart httpd.service memcached.service
