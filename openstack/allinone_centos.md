@@ -143,3 +143,149 @@ flavor = keystone
 [root@controller ~(keystone)]# systemctl start openstack-glance-api.service openstack-glance-registry.service
 
 [root@controller ~(keystone)]#  systemctl enable openstack-glance-api.service openstack-glance-registry.service
+
+## Configure Nova
+
+[root@controller ~(keystone)]# mysql -u root -p
+<pre><code>
+MariaDB [(none)]> CREATE DATABASE nova_api;
+MariaDB [(none)]> CREATE DATABASE nova;
+MariaDB [(none)]> CREATE DATABASE nova_cell0;
+MariaDB [(none)]> GRANT ALL PRIVILEGES ON nova_api.* TO 'nova'@'localhost' IDENTIFIED BY 'NOVA_DBPASS';
+MariaDB [(none)]> GRANT ALL PRIVILEGES ON nova_api.* TO 'nova'@'%' IDENTIFIED BY 'NOVA_DBPASS';
+MariaDB [(none)]> GRANT ALL PRIVILEGES ON nova.* TO 'nova'@'localhost' IDENTIFIED BY 'NOVA_DBPASS';
+MariaDB [(none)]> GRANT ALL PRIVILEGES ON nova.* TO 'nova'@'%' IDENTIFIED BY 'NOVA_DBPASS';
+MariaDB [(none)]> GRANT ALL PRIVILEGES ON nova_cell0.* TO 'nova'@'localhost' IDENTIFIED BY 'NOVA_DBPASS';
+MariaDB [(none)]> GRANT ALL PRIVILEGES ON nova_cell0.* TO 'nova'@'%'   IDENTIFIED BY 'NOVA_DBPASS';
+MariaDB [(none)]> EXIT;
+</pre></code>
+
+[root@controller ~(keystone)]# openstack user create --domain default --password NOVA_PASS nova
+
+[root@controller ~(keystone)]# openstack role add --project service --user nova admin
+
+[root@controller ~(keystone)]# openstack service create --name nova --description "OpenStack Compute" compute
+
+[root@controller ~(keystone)]# openstack endpoint create --region RegionOne compute public http://controller:8774/v2.1
+
+[root@controller ~(keystone)]# openstack endpoint create --region RegionOne compute internal http://controller:8774/v2.1
+
+[root@controller ~(keystone)]# openstack endpoint create --region RegionOne compute admin http://controller:8774/v2.1
+
+[root@controller ~(keystone)]# openstack user create --domain default --password PLACEMENT_PASS placement
+
+[root@controller ~(keystone)]# openstack role add --project service --user placement admin
+
+[root@controller ~(keystone)]# openstack service create --name placement --description "Placement API" placement
+
+[root@controller ~(keystone)]# openstack endpoint create --region RegionOne placement public http://controller:8778
+
+[root@controller ~(keystone)]# openstack endpoint create --region RegionOne placement internal http://controller:8778
+
+[root@controller ~(keystone)]# openstack endpoint create --region RegionOne placement admin http://controller:8778
+
+[root@controller ~(keystone)]# yum install -y openstack-nova-api openstack-nova-conductor \\ 
+openstack-nova-console openstack-nova-novncproxy \\ \
+openstack-nova-scheduler openstack-nova-placement-api \\ \
+openstack-nova-compute
+
+[root@controller ~(keystone)]# vi /etc/nova/nova.conf
+<pre><code>
+[DEFAULT]
+use_neutron=true
+firewall_driver=nova.virt.firewall.NoopFirewallDriver
+enabled_apis=osapi_compute,metadata
+transport_url = rabbit://openstack:RABBIT_PASS@controller
+
+[api]
+auth_strategy=keystone
+
+[api_database]
+connection = mysql+pymysql://nova:NOVA_DBPASS@controller/nova_api
+
+[database]
+connection = mysql+pymysql://nova:NOVA_DBPASS@controller/nova
+
+[glance]
+api_servers = http://controller:9292
+
+[keystone_authtoken]
+auth_url = http://controller:5000/v3
+memcached_servers = controller:11211
+auth_type = password
+project_domain_name = default
+user_domain_name = default
+project_name = service
+username = nova
+password = NOVA_PASS
+
+[oslo_concurrency]
+lock_path=/var/lib/nova/tmp
+
+[placement]
+os_region_name = RegionOne
+project_domain_name = Default
+project_name = service
+auth_type = password
+user_domain_name = Default
+auth_url = http://controller:5000/v3
+username = placement
+password = PLACEMENT_PASS
+
+[scheduler]
+discover_hosts_in_cells_interval=300
+
+[vnc]
+enabled=true
+server_listen=0.0.0.0
+server_proxyclient_address=controller
+novncproxy_base_url=http://10.55.195.7:6080/vnc_auto.html
+</pre></code>
+
+[root@controller ~(keystone)]# vi /etc/httpd/conf.d/00-nova-placement-api.conf
+<pre><code>
+<Directory /usr/bin>
+   <IfVersion >= 2.4>
+      Require all granted
+   </IfVersion>
+   <IfVersion < 2.4>
+      Order allow,deny
+      Allow from all
+   </IfVersion>
+</Directory>
+</pre></code>
+[root@controller ~(keystone)]# systemctl restart httpd
+
+[root@controller ~(keystone)]# su -s /bin/sh -c "nova-manage api_db sync" nova Ignore any deprecation messages in this output.
+
+[root@controller ~(keystone)]# su -s /bin/sh -c "nova-manage cell_v2 map_cell0" nova
+
+[root@controller ~(keystone)]# su -s /bin/sh -c "nova-manage cell_v2 create_cell --name=cell1 --verbose" nova
+
+[root@controller ~(keystone)]# su -s /bin/sh -c "nova-manage db sync" nova
+
+[root@controller ~(keystone)]# nova-manage cell_v2 list_cells
+
+[root@controller ~(keystone)]# systemctl start openstack-nova-api.service \\ \
+openstack-nova-consoleauth.service openstack-nova-scheduler.service \\ \
+openstack-nova-conductor.service openstack-nova-novncproxy.service \\ \
+libvirtd.service openstack-nova-compute.service
+
+[root@controller ~(keystone)]# systemctl enable openstack-nova-api.service \\ \
+openstack-nova-consoleauth.service openstack-nova-scheduler.service \\ \
+openstack-nova-conductor.service openstack-nova-novncproxy.service \\ \
+libvirtd.service openstack-nova-compute.service
+
+[root@controller ~(keystone)]# su -s /bin/sh -c "nova-manage cell_v2 discover_hosts --verbose" nova
+
+[root@controller ~(keystone)]# openstack compute service list
+<pre><code>
++----+------------------+------------+----------+---------+-------+----------------------------+
+| ID | Binary           | Host       | Zone     | Status  | State | Updated At                 |
++----+------------------+------------+----------+---------+-------+----------------------------+
+|  1 | nova-consoleauth | controller | internal | enabled | up    | 2019-01-14T04:48:32.000000 |
+|  2 | nova-scheduler   | controller | internal | enabled | up    | 2019-01-14T04:48:32.000000 |
+|  3 | nova-conductor   | controller | internal | enabled | up    | 2019-01-14T04:48:32.000000 |
+| 19 | nova-compute     | controller | nova     | enabled | up    | None                       |
++----+------------------+------------+----------+---------+-------+----------------------------+
+</pre></code>
