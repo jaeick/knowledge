@@ -2,12 +2,12 @@
 ## Configure Keystone
 
 [root@controller ~]# mysql -u root -p
-<pre><code>
+```
 MariaDB [(none)]> CREATE DATABASE keystone;
 MariaDB [(none)]> GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'localhost' IDENTIFIED BY 'KEYSTONE_DBPASS';
 MariaDB [(none)]> GRANT ALL PRIVILEGES ON keystone.* TO 'keystone'@'%' IDENTIFIED BY 'KEYSTONE_DBPASS';
 MariaDB [(none)]> EXIT;
-</pre></code>
+```
 
 [root@controller ~]# yum install -y openstack-keystone httpd mod_wsgi
 
@@ -243,7 +243,7 @@ novncproxy_base_url=http://10.55.195.7:6080/vnc_auto.html
 </pre></code>
 
 [root@controller ~(keystone)]# vi /etc/httpd/conf.d/00-nova-placement-api.conf
-<pre><code>
+```
 <Directory /usr/bin>
    <IfVersion >= 2.4>
       Require all granted
@@ -253,7 +253,7 @@ novncproxy_base_url=http://10.55.195.7:6080/vnc_auto.html
       Allow from all
    </IfVersion>
 </Directory>
-</pre></code>
+```
 [root@controller ~(keystone)]# systemctl restart httpd
 
 [root@controller ~(keystone)]# su -s /bin/sh -c "nova-manage api_db sync" nova Ignore any deprecation messages in this output.
