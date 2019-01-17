@@ -12,13 +12,13 @@ MariaDB [(none)]> EXIT;
 [root@controller ~]# yum install -y openstack-keystone httpd mod_wsgi
 
 [root@controller ~]# vi /etc/keystone/keystone.conf
-<pre><code>
+```
 [database]
 connection = mysql+pymysql://keystone:KEYSTONE_DBPASS@controller/keystone
 
 [token]
 provider = fernet
-</pre></code>
+```
 
 [root@controller ~]# su -s /bin/sh -c "keystone-manage db_sync" keystone
 
@@ -33,9 +33,9 @@ provider = fernet
 --bootstrap-region-id RegionOne
 
 [root@controller ~]# vi /etc/httpd/conf/httpd.conf
-<pre><code>
+```
 ServerName controller
-</pre></code>
+```
 
 [root@controller ~]# ln -s /usr/share/keystone/wsgi-keystone.conf /etc/httpd/conf.d/
 
@@ -44,7 +44,7 @@ ServerName controller
 [root@controller ~]# systemctl enable httpd.service
 
 [root@controller ~]# vi keystone-admin
-<pre><code>
+```
 export OS_PROJECT_DOMAIN_NAME=Default
 export OS_USER_DOMAIN_NAME=Default
 export OS_PROJECT_NAME=admin
@@ -54,12 +54,12 @@ export OS_AUTH_URL=http://controller:5000/v3
 export OS_IDENTITY_API_VERSION=3
 export OS_IMAGE_API_VERSION=2
 export PS1='[\u@\h \W(keystone)]\$ '
-</pre></code>
+```
 
 [root@controller ~]# source keystone-amin
 
 [root@controller ~(keystone)]# openstack token issue
-<pre><code>
+```
 +------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Field      | Value                                                                                                                                                                                   |
 +------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -68,16 +68,16 @@ export PS1='[\u@\h \W(keystone)]\$ '
 | project_id | 0e98eda71bee4fc78a64819e46fbe13d                                                                                                                                                        |
 | user_id    | 0a6e433380b840e28862e443dab7dbd7                                                                                                                                                        |
 +------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-</pre></code>
+```
 
 ## Configure Glance
 
 [root@controller ~(keystone)]# mysql -u root -p
-<pre><code>
+```
 MariaDB [(none)]> CREATE DATABASE glance;
 MariaDB [(none)]> GRANT ALL PRIVILEGES ON glance.* TO 'glance'@'localhost' IDENTIFIED BY 'GLANCE_DBPASS';
 MariaDB [(none)]> GRANT ALL PRIVILEGES ON glance.* TO 'glance'@'%' IDENTIFIED BY 'GLANCE_DBPASS';
-</pre></code>
+```
 
 [root@controller ~(keystone)]# openstack user create --domain default --password GLANCE_PASS glance
 
@@ -94,7 +94,7 @@ MariaDB [(none)]> GRANT ALL PRIVILEGES ON glance.* TO 'glance'@'%' IDENTIFIED BY
 [root@controller ~(keystone)]# yum install -y openstack-glance
 
 [root@controller ~(keystone)]# vi /etc/glance/glance-api.conf
-<pre><code>
+```
 [database]
 connection = mysql+pymysql://glance:GLANCE_DBPASS@controller/glance
 
@@ -116,10 +116,10 @@ password = GLANCE_PASS
 
 [paste_deploy]
 flavor = keystone
-</pre></code>
+```
 
 [root@vems ~]# vi /etc/glance/glance-registry.conf
-<pre><code>
+```
 [database]
 connection = mysql+pymysql://glance:GLANCE_DBPASS@controller/glance
 
@@ -136,7 +136,7 @@ password = GLANCE_PASS
 
 [paste_deploy]
 flavor = keystone
-</pre></code>
+```
 
 [root@controller ~(keystone)]# su -s /bin/sh -c "glance-manage db_sync" glance
 
@@ -147,7 +147,7 @@ flavor = keystone
 ## Configure Nova
 
 [root@controller ~(keystone)]# mysql -u root -p
-<pre><code>
+```
 MariaDB [(none)]> CREATE DATABASE nova_api;
 MariaDB [(none)]> CREATE DATABASE nova;
 MariaDB [(none)]> CREATE DATABASE nova_cell0;
@@ -158,7 +158,7 @@ MariaDB [(none)]> GRANT ALL PRIVILEGES ON nova.* TO 'nova'@'%' IDENTIFIED BY 'NO
 MariaDB [(none)]> GRANT ALL PRIVILEGES ON nova_cell0.* TO 'nova'@'localhost' IDENTIFIED BY 'NOVA_DBPASS';
 MariaDB [(none)]> GRANT ALL PRIVILEGES ON nova_cell0.* TO 'nova'@'%'   IDENTIFIED BY 'NOVA_DBPASS';
 MariaDB [(none)]> EXIT;
-</pre></code>
+```
 
 [root@controller ~(keystone)]# openstack user create --domain default --password NOVA_PASS nova
 
@@ -190,7 +190,7 @@ openstack-nova-scheduler openstack-nova-placement-api \\ \
 openstack-nova-compute
 
 [root@controller ~(keystone)]# vi /etc/nova/nova.conf
-<pre><code>
+```
 [DEFAULT]
 use_neutron=true
 firewall_driver=nova.virt.firewall.NoopFirewallDriver
@@ -240,7 +240,7 @@ enabled=true
 server_listen=0.0.0.0
 server_proxyclient_address=controller
 novncproxy_base_url=http://10.55.195.7:6080/vnc_auto.html
-</pre></code>
+```
 
 [root@controller ~(keystone)]# vi /etc/httpd/conf.d/00-nova-placement-api.conf
 ```
@@ -279,7 +279,7 @@ libvirtd.service openstack-nova-compute.service
 [root@controller ~(keystone)]# su -s /bin/sh -c "nova-manage cell_v2 discover_hosts --verbose" nova
 
 [root@controller ~(keystone)]# openstack compute service list
-<pre><code>
+```
 +----+------------------+------------+----------+---------+-------+----------------------------+
 | ID | Binary           | Host       | Zone     | Status  | State | Updated At                 |
 +----+------------------+------------+----------+---------+-------+----------------------------+
@@ -288,4 +288,4 @@ libvirtd.service openstack-nova-compute.service
 |  3 | nova-conductor   | controller | internal | enabled | up    | 2019-01-14T04:48:32.000000 |
 | 19 | nova-compute     | controller | nova     | enabled | up    | None                       |
 +----+------------------+------------+----------+---------+-------+----------------------------+
-</pre></code>
+```
