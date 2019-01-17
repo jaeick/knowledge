@@ -1,5 +1,5 @@
 
-# Configure Keystone
+## Configure Keystone
 
 [root@controller ~]# mysql -u root -p
 <pre><code>
@@ -69,3 +69,77 @@ export PS1='[\u@\h \W(keystone)]\$ '
 | user_id    | 0a6e433380b840e28862e443dab7dbd7                                                                                                                                                        |
 +------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 </pre></code>
+
+## Configure Glance
+
+[root@controller ~(keystone)]# mysql -u root -p
+<pre><code>
+MariaDB [(none)]> CREATE DATABASE glance;
+MariaDB [(none)]> GRANT ALL PRIVILEGES ON glance.* TO 'glance'@'localhost' IDENTIFIED BY 'GLANCE_DBPASS';
+MariaDB [(none)]> GRANT ALL PRIVILEGES ON glance.* TO 'glance'@'%' IDENTIFIED BY 'GLANCE_DBPASS';
+</pre></code>
+
+[root@controller ~(keystone)]# openstack user create --domain default --password GLANCE_PASS glance
+
+[root@controller ~(keystone)]# openstack role add --project service --user glance admin
+
+[root@controller ~(keystone)]# openstack service create --name glance --description "OpenStack Image" image
+
+[root@controller ~(keystone)]# openstack endpoint create --region RegionOne image public http://controller:9292
+
+[root@controller ~(keystone)]## openstack endpoint create --region RegionOne image internal http://controller:9292
+
+[root@controller ~(keystone)]# openstack endpoint create --region RegionOne image admin http://controller:9292
+
+[root@controller ~(keystone)]# yum install -y openstack-glance
+
+[root@controller ~(keystone)]# vi /etc/glance/glance-api.conf
+<pre><code>
+[database]
+connection = mysql+pymysql://glance:GLANCE_DBPASS@controller/glance
+
+[glance_store]
+stores = file,http
+default_store = file
+filesystem_store_datadir = /var/lib/glance/images
+
+[keystone_authtoken]
+auth_uri = http://controller:5000
+auth_url = http://controller:5000
+memcached_servers = controller:11211
+auth_type = password
+project_domain_name = Default
+user_domain_name = Default
+project_name = service
+username = glance
+password = GLANCE_PASS
+
+[paste_deploy]
+flavor = keystone
+</pre></code>
+
+[root@vems ~]# vi /etc/glance/glance-registry.conf
+<pre><code>
+[database]
+connection = mysql+pymysql://glance:GLANCE_DBPASS@controller/glance
+
+[keystone_authtoken]
+auth_uri = http://controller:5000
+auth_url = http://controller:5000
+memcached_servers = controller:11211
+auth_type = password
+project_domain_name = Default
+user_domain_name = Default
+project_name = service
+username = glance
+password = GLANCE_PASS
+
+[paste_deploy]
+flavor = keystone
+</pre></code>
+
+[root@controller ~(keystone)]# su -s /bin/sh -c "glance-manage db_sync" glance
+
+[root@controller ~(keystone)]# systemctl start openstack-glance-api.service openstack-glance-registry.service
+
+[root@controller ~(keystone)]#  systemctl enable openstack-glance-api.service openstack-glance-registry.service
