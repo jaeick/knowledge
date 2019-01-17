@@ -286,3 +286,158 @@ openstack-nova-novncproxy.service openstack-nova-compute.service
 | 19 | nova-compute     | controller | nova     | enabled | up    | None                       |
 +----+------------------+------------+----------+---------+-------+----------------------------+
 ```
+
+## Configure Neutron
+
+[root@controller ~(keystone)]# mysql -u root -p
+```
+MariaDB [(none)]> CREATE DATABASE neutron;
+MariaDB [(none)]> GRANT ALL PRIVILEGES ON neutron.* TO 'neutron'@'localhost' IDENTIFIED BY 'NEUTRON_DBPASS';
+MariaDB [(none)]> GRANT ALL PRIVILEGES ON neutron.* TO 'neutron'@'%' IDENTIFIED BY 'NEUTRON_DBPASS';
+MariaDB [(none)]> EXIT;
+```
+
+[root@controller ~(keystone)]# openstack user create --domain default --password NEUTRON_PASS neutron
+
+[root@controller ~(keystone)]# openstack role add --project service --user neutron admin
+
+[root@controller ~(keystone)]# openstack service create --name neutron --description "OpenStack Networking" network
+
+[root@controller ~(keystone)]# openstack endpoint create --region RegionOne network public http://controller:9696
+
+[root@controller ~(keystone)]# openstack endpoint create --region RegionOne network internal http://controller:9696
+
+[root@controller ~(keystone)]# openstack endpoint create --region RegionOne network admin http://controller:9696
+
+[root@controller ~(keystone)]#  yum install -y openstack-neutron openstack-neutron-ml2 openstack-neutron-openvswitch ebtables
+
+[root@controller ~(keystone)]# vi /etc/neutron/neutron.conf
+```
+[DEFAULT]
+auth_strategy = keystone
+core_plugin = ml2
+service_plugins = router
+dhcp_agent_notification = true
+allow_overlapping_ips = True
+notify_nova_on_port_status_changes = true
+notify_nova_on_port_data_changes = true
+dhcp_agents_per_network = 2
+transport_url = rabbit://openstack:RABBIT_PASS@controller
+
+[database]
+connection = mysql+pymysql://neutron:NEUTRON_DBPASS@controller/neutron
+
+[keystone_authtoken]
+auth_uri = http://controller:5000
+auth_url = http://controller:35357
+memcached_servers = controller:11211
+auth_type = password
+project_domain_name = default
+user_domain_name = default
+project_name = service
+username = neutron
+password = NEUTRON_PASS
+
+[nova]
+auth_url = http://controller:35357
+auth_type = password
+project_domain_name = default
+user_domain_name = default
+region_name = RegionOne
+project_name = service
+username = nova
+password = NOVA_PASS
+
+[oslo_concurrency]
+lock_path = /var/lib/neutron/tmp
+```
+
+[root@controller ~(keystone)]# vi /etc/neutron/l3_agent.ini
+```
+[DEFAULT]
+interface_driver = openvswitch
+```
+
+[root@controller ~(keystone)]# vi /etc/neutron/dhcp_agent.ini
+```
+[DEFAULT]
+interface_driver = openvswitch
+dhcp_driver = neutron.agent.linux.dhcp.Dnsmasq
+enable_isolated_metadata = True
+```
+
+[root@controller ~(keystone)]# vi /etc/neutron/metadata_agent.ini
+```
+[DEFAULT]
+nova_metadata_host = controller
+metadata_proxy_shared_secret = METADATA_SECRET
+```
+
+[root@controller ~(keystone)]# vi /etc/neutron/plugins/ml2/ml2_conf.ini
+```
+[ml2]
+type_drivers = flat,vlan,vxlan
+tenant_network_types =  
+mechanism_drivers = openvswitch,l2population
+extension_drivers = port_security
+```
+
+[root@controller ~(keystone)]# vi /etc/neutron/plugins/ml2/openvswitch_agent.ini
+```
+[securitygroup]
+firewall_driver = iptables_hybrid
+enable_security_group = true
+enable_ipset = true
+```
+
+[root@controller ~(keystone)]# vi /etc/nova/nova.conf
+```
+[DEFAULT]
+linuxnet_interface_driver=nova.network.linux_net.LinuxBridgeInterfaceDriver
+use_neutron=true
+
+[neutron]
+url = http://controller:9696
+auth_url = http://controller:35357
+auth_type = password
+project_domain_name = default
+user_domain_name = default
+region_name = RegionOne
+project_name = service
+username = neutron
+password = NEUTRON_PASS
+service_metadata_proxy = true
+metadata_proxy_shared_secret = METADATA_SECRET
+```
+
+[root@controller ~(keystone)]# systemctl start openvswitch
+
+[root@controller ~(keystone)]# systemctl enable openvswitch
+
+[root@controller ~(keystone)]# ovs-vsctl add-br br-int
+
+[root@controller ~(keystone)]# ln -s /etc/neutron/plugins/ml2/ml2_conf.ini /etc/neutron/plugin.ini
+
+[root@controller ~(keystone)]# su -s /bin/sh -c "neutron-db-manage --config-file /etc/neutron/neutron.conf \\ 
+--config-file /etc/neutron/plugins/ml2/ml2_conf.ini upgrade head" neutron
+
+[root@controller ~(keystone)]# systemctl start neutron-server.service neutron-dhcp-agent.service \\ \
+neutron-l3-agent.service neutron-metadata-agent.service neutron-openvswitch-agent
+
+[root@controller ~(keystone)]# systemctl enable neutron-server.service neutron-dhcp-agent.service \\ \
+neutron-l3-agent.service neutron-metadata-agent.service neutron-openvswitch-agent
+
+[root@controller ~(keystone)]# systemctl restart openstack-nova-api openstack-nova-compute
+
+[root@controller ~(keystone)]# openstack network agent list
+```
++--------------------------------------+--------------------+------------+-------------------+-------+-------+---------------------------+
+| ID                                   | Agent Type         | Host       | Availability Zone | Alive | State | Binary                    |
++--------------------------------------+--------------------+------------+-------------------+-------+-------+---------------------------+
+| 360a0e64-8911-4d7e-8b4d-21e886e1d34a | L3 agent           | controller | nova              | :-)   | UP    | neutron-l3-agent          |
+| 57408486-6e56-429a-8cfd-80f68f0e52bc | NIC Switch agent   | controller | None              | :-)   | UP    | neutron-sriov-nic-agent   |
+| 7a816347-f329-434f-89e5-a4eab596091d | Metadata agent     | controller | None              | :-)   | UP    | neutron-metadata-agent    |
+| af3df282-b3ad-4ef4-a0c1-0696fb080f29 | DHCP agent         | controller | nova              | :-)   | UP    | neutron-dhcp-agent        |
+| fd66e468-e98a-441a-a9b6-a914526c4323 | Open vSwitch agent | controller | None              | :-)   | UP    | neutron-openvswitch-agent |
++--------------------------------------+--------------------+------------+-------------------+-------+-------+---------------------------+
+```
