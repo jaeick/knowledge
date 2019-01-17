@@ -309,7 +309,8 @@ MariaDB [(none)]> EXIT;
 
 [root@controller ~(keystone)]# openstack endpoint create --region RegionOne network admin http://controller:9696
 
-[root@controller ~(keystone)]#  yum install -y openstack-neutron openstack-neutron-ml2 openstack-neutron-openvswitch ebtables
+[root@controller ~(keystone)]#  yum install -y openstack-neutron openstack-neutron-ml2 \\ \
+openstack-neutron-openvswitch ebtables
 
 [root@controller ~(keystone)]# vi /etc/neutron/neutron.conf
 ```
@@ -418,7 +419,7 @@ metadata_proxy_shared_secret = METADATA_SECRET
 
 [root@controller ~(keystone)]# ln -s /etc/neutron/plugins/ml2/ml2_conf.ini /etc/neutron/plugin.ini
 
-[root@controller ~(keystone)]# su -s /bin/sh -c "neutron-db-manage --config-file /etc/neutron/neutron.conf \\ 
+[root@controller ~(keystone)]# su -s /bin/sh -c "neutron-db-manage --config-file /etc/neutron/neutron.conf \\ \
 --config-file /etc/neutron/plugins/ml2/ml2_conf.ini upgrade head" neutron
 
 [root@controller ~(keystone)]# systemctl start neutron-server.service neutron-dhcp-agent.service \\ \
