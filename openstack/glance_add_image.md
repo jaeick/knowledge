@@ -7,9 +7,10 @@ $ wget http://cloud-images.ubuntu.com/xenial/current/xenial-server-cloudimg-amd6
 ## glance에 image 등록하기
 
 <pre><code>
-$ openstack image create "ubuntu16.04" \
+$ openstack image create \
 --file xenial-server-cloudimg-amd64-disk1.img \
 --disk-format qcow2 \
 --container-format bare \
 --public
+ubuntu16.04
 </pre></code>
