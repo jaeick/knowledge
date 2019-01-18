@@ -10,13 +10,13 @@
 ------------------------ Management
 ```
 
-[root@controller ~(keystone)]# ovs-vsctl add-br br-enp11s0
+[root@controller ~(keystone)]# ovs-vsctl add-br br-eth1
 
-[root@controller ~(keystone)]# ovs-vsctl add-port br-enp11s0 enp11s0
+[root@controller ~(keystone)]# ovs-vsctl add-port br-eth1 eth1
 
-[root@controller ~(keystone)]# ovs-vsctl add-br br-ens4f0
+[root@controller ~(keystone)]# ovs-vsctl add-br br-eth1
 
-[root@controller ~(keystone)]# ovs-vsctl add-port br-ens4f0 ens4f0
+[root@controller ~(keystone)]# ovs-vsctl add-port br-eth1 eth1
 
 ```
 [root@controller ~(keystone)]# vi /etc/neutron/plugins/ml2/ml2_conf.ini
