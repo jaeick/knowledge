@@ -14,9 +14,9 @@
 
 [root@controller ~(keystone)]# ovs-vsctl add-port br-eth1 eth1
 
-[root@controller ~(keystone)]# ovs-vsctl add-br br-eth1
+[root@controller ~(keystone)]# ovs-vsctl add-br br-eth2
 
-[root@controller ~(keystone)]# ovs-vsctl add-port br-eth1 eth1
+[root@controller ~(keystone)]# ovs-vsctl add-port br-eth1 eth2
 
 ```
 [root@controller ~(keystone)]# vi /etc/neutron/plugins/ml2/ml2_conf.ini
