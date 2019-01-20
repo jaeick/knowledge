@@ -73,6 +73,13 @@ character-set-server = utf8
 
 [root@controller ~]# systemctl enable mariadb.service
 
+max-connections 설정 적용 확인 
+```
+[root@controller ~(keystone)]# mysql -u root -p
+MariaDB [(none)]> show variables like 'max_connections';
+MariaDB [(none)]> SET GLOBAL max_connections=4096;
+```
+
 ## Configure message queue
 
 [root@controller ~]# yum install -y rabbitmq-server
