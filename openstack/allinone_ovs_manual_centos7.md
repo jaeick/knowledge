@@ -73,7 +73,7 @@ character-set-server = utf8
 
 [root@controller ~]# systemctl enable mariadb.service
 
-**max-connections 설정 적용 확인 필요**
+> *max-connections 설정 적용 확인 필요*
 ```
 [root@controller ~(keystone)]# mysql -u root -p
 MariaDB [(none)]> show variables like 'max_connections';
