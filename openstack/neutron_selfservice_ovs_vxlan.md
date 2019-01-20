@@ -8,9 +8,9 @@ Service -------------
          eth0|
              |
 Management ----------
+```
 
 [root@controller ~(keystone)]# vi /etc/neutron/plugins/ml2/ml2_conf.ini
-
 ```
 [ml2]
 tenant_network_types = vxlan
