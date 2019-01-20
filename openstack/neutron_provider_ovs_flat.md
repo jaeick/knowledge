@@ -1,13 +1,13 @@
 ```
-Service1 ----------   ---------- Service2
-             |           |
-             |eth1       |eth2
-          +===================+
-          |                   |
-          +===================+
-                 |eth0
+Service1 --------  --------- Service2
+             |        |
+         eth1|        |eth2
+          +===============+
+          |               |
+          +===============+
+             eth0|
                  |
-Management ---------------- 
+Management -------------- 
 ```
 
 [root@controller ~(keystone)]# ovs-vsctl add-br br-eth1
