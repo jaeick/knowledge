@@ -30,7 +30,7 @@ flat_networks = physnet1,physnet2
 [root@controller ~(keystone)]# vi /etc/neutron/plugins/ml2/openvswitch_agent.ini
 ```
 [ovs]
-bridge_mappings = physnet1:br-enp11s0,physnet2:br-ens4f0
+bridge_mappings = physnet1:br-eth1,physnet2:br-eth2
 ```
 
 [root@controller ~(keystone)]# systemctl restart neutron-openvswitch-agent
