@@ -8,7 +8,7 @@
 
 ## Configure network interface
 
-[root@controller ~]# vi /etc/sysconfig/network-scripts/ifcfg-enp10s0
+[root@controller ~]# vi /etc/sysconfig/network-scripts/ifcfg-eth0
 ```
 TYPE=Ethernet
 BOOTPROTO=static
