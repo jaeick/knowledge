@@ -1,4 +1,103 @@
 
+## Configure hostname
+
+[root@controller ~]# cat /etc/hosts
+```
+10.55.195.7 controlle
+```
+
+## Configure network interface
+
+[root@controller ~]# vi /etc/sysconfig/network-scripts/ifcfg-enp10s0
+```
+TYPE=Ethernet
+BOOTPROTO=static
+IPADDR=10.55.195.7
+NETMASK=255.255.255.0
+GATEWAY=10.55.195.254
+DNS1=8.8.8.8
+NAME=enp10s0
+DEVICE=enp10s0
+ONBOOT=yes
+```
+
+## Configure service
+
+[root@controller ~]# systemctl stop NetworkManager firewalld postfix
+
+[root@controller ~]# systemctl disable NetworkManager firewalld postfix
+
+[root@controller ~]# setenforce 0
+
+[root@controller ~]# vi /etc/sysconfig/selinux
+```
+SELINUX=permissive
+```
+
+## Configure NTP
+
+[root@controller ~]# vi /etc/chrony.conf
+```
+server time.ewha.or.kr iburst
+allow 10.55.195.0/24
+```
+
+[root@controller ~]# systemctl start chronyd.service
+
+[root@controller ~]# systemctl enable chronyd.service
+
+## Configure openstack package
+
+[root@controller ~]# yum install -y centos-release-openstack-queens
+
+[root@controller ~]# yum upgrade -y
+
+[root@controller ~]# yum install -y python-openstackclient openstack-selinux openstack-utils
+
+## Configure database
+
+[root@controller ~]# yum install -y mariadb mariadb-server python2-PyMySQL
+
+[root@controller ~]# vi /etc/my.cnf.d/openstack.cnf
+```
+[mysqld]
+bind-address = 10.55.195.7
+default-storage-engine = innodb
+innodb_file_per_table = on
+max_connections = 4096
+collation-server = utf8_general_ci
+character-set-server = utf8
+```
+
+[root@controller ~]# systemctl start mariadb.service
+
+[root@controller ~]# systemctl enable mariadb.service
+
+## Configure message queue
+
+[root@controller ~]# yum install -y rabbitmq-server
+
+[root@controller ~]# systemctl start rabbitmq-server.service
+
+[root@controller ~]# systemctl enable rabbitmq-server.service
+
+[root@controller ~]# rabbitmqctl add_user openstack RABBIT_PASS
+
+[root@controller ~]# rabbitmqctl set_permissions openstack ".*" ".*" ".*"
+
+## Configure memcached
+
+[root@controller ~]# yum install -y memcached python-memcached
+
+[root@controller ~]# vi /etc/sysconfig/memcached
+```
+OPTIONS="-l 127.0.0.1,::1,controller"
+```
+
+[root@controller ~]# systemctl start memcached.service
+
+[root@controller ~]# systemctl enable memcached.service
+
 ## Configure Keystone
 
 [root@controller ~]# mysql -u root -p
