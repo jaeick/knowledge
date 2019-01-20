@@ -35,17 +35,17 @@ bridge_mappings = physnet1:br-eth1
 
 [root@controller ~(keystone)]# openstack-service restart neutron
 
-[root@controller ~(keystone)]# openstack network create \\ \  
+[root@controller ~(keystone)]# openstack network create \\ \
 --provider-network-type flat \\ \
 --provider-physical-network physnet1 \\ \
---share --external\\ \
+--share --external \\ \
 net-provider1
 
-[root@controller ~(keystone)]# openstack subnet create \\ \ 
---network net-provider1 \\ \ 
---subnet-range 10.55.195.0/24 \\ \ 
+[root@controller ~(keystone)]# openstack subnet create \\ \
+--network net-provider1 \\ \
+--subnet-range 10.55.195.0/24 \\ \
 --allocation-pool start=10.55.195.32,end=10.55.195.39 \\ \
---gateway 10.55.195.254 --dns-nameserver 8.8.8.8 \\ \ 
+--gateway 10.55.195.254 --dns-nameserver 8.8.8.8 \\ \
 subnet-provider1-v4
 
 [root@controller ~(keystone)]#  openstack network create net-selfservice1
