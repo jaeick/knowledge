@@ -34,8 +34,9 @@ m1.small
 
 ## Security-group rule 등록
 
-```
 [root@controller ~(keystone)]# openstack project list
+
+```
 +----------------------------------+---------+
 | ID                               | Name    |
 +----------------------------------+---------+
@@ -60,3 +61,30 @@ m1.small
 [root@controller ~(keystone)]# openstack security group rule create --protocol tcp --ingress bd6224ce-46fa-400e-9298-8c0c8d36d791
 
 [root@controller ~(keystone)]# openstack security group rule create --protocol udp --ingress bd6224ce-46fa-400e-9298-8c0c8d36d791t
+
+## userdata 생성
+
+[root@controller ~(keystone)]# vi userdata.yaml
+```
+#cloud-config
+
+password: openstack
+chpasswd:
+  expire: False
+  root: openstack
+
+ssh_pwauth: True
+disable_root: False
+
+timezone: Asia/Seoul
+```
+
+## Start instance
+
+[root@controller ~(keystone)]# openstack server create \\ \
+--flavor m1.small \\ \
+--image centos7 \\ \
+--security-group bd6224ce-46fa-400e-9298-8c0c8d36d791 \\ \
+--nic net-id=net-provider1,v4-fixed-ip=10.55.195.37 \\ \
+--user-data userdata.ymal \\ \
+vm-fixed-v4
