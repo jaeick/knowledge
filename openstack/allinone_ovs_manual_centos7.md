@@ -3,7 +3,7 @@
 
 [root@controller ~]# cat /etc/hosts
 ```
-10.55.195.7 controlle
+10.55.195.7 controller
 ```
 
 ## Configure network interface
