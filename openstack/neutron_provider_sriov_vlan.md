@@ -75,9 +75,6 @@ type_drivers = flat,vlan
 tenant_network_types =
 mechanism_drivers = openvswitch,l2population,sriovnicswitch
 
-[ml2_type_flat]
-flat_networks = physnet1,physnet2
-
 [ml2_type_vlan]
 network_vlan_ranges = physnet3
 
