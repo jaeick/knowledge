@@ -97,10 +97,6 @@ physical_device_mappings = physnet3:ens4f1
 
 [root@controller ~(keystone)]# systemctl enable neutron-sriov-nic-agent.service
 
-[root@controller ~(keystone)]# ovs-vsctl add-br br-ens4f1
-
-[root@controller ~(keystone)]# ovs-vsctl add-port br-ens4f1 ens4f1
-
 [root@controller ~(keystone)]# openstack network create \\ \
 --provider-network-type vlan \\ \
 --provider-physical-network physnet3 \\ \
