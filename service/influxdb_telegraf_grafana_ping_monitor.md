@@ -50,6 +50,7 @@
 # curl https://packagecloud.io/gpg.key | sudo apt-key add -
 # apt-get update && apt-get intsall -y grafana
 # systemctl start grafana-server
+# systemctl  grafana-server
 </pre></code>
 
 http://localhost:3000 (admin/admin)
