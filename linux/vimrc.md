@@ -6,7 +6,7 @@ set shiftwidth=4
 set expandtab
 ```
 
-##vi 입력시 vim 실행
+## vi 입력시 vim 실행
 
 ~/.bashrc 편집
 ```
