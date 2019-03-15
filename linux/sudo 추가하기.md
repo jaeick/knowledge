@@ -5,6 +5,6 @@ $ echo "ubuntu ALL=(ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/ubuntu
 
 ## user를 sudo group에 추가
 ```
-# usermod -g sudo jack
+# usermod -G sudo jack
 ```
 
