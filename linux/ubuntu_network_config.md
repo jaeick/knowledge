@@ -13,9 +13,9 @@ h2. IPv6 Static
 auto ens4
 iface ens4 inet6 static
   pre-up modprobe ipv6
-        address 2001:0:0:10::33
-        netmask 64
-        gateway 2001:0:0:10::1
+  address 2001:0:0:10::33
+  netmask 64
+  gateway 2001:0:0:10::1
 ```
 
 h2. restart
