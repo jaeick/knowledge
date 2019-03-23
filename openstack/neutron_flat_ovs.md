@@ -15,7 +15,6 @@ flat_networks = physnet1,physnet2
 ## vi /etc/neutron/plugins/ml2/openvswitch_agent.ini
 ```
 [ovs]
-# bridge_mappings = mgmtnet:br-enp11s0,srvnet:br-ens4f0
 bridge_mappings = physnet1:br-enp11s0,physnet2:br-ens15f0,srvnet:br-ens4f0
 ```
 
