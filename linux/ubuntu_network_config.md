@@ -17,3 +17,8 @@ iface ens4 inet6 static
         netmask 64
         gateway 2001:0:0:10::1
 ```
+
+h2. restart
+```
+# systemctl restart networking
+```
