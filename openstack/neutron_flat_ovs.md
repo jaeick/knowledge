@@ -20,7 +20,7 @@ bridge_mappings = physnet1:br-enp11s0,physnet2:br-ens15f0,srvnet:br-ens4f0
 
 ## openstack restart
 ```
-# systemctl-service restart neutron
+# openstack-service restart neutron
 # openstack-service status neutron
 ```
 
