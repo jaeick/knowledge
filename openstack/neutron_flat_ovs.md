@@ -49,7 +49,7 @@ openstack network create net-mgmt6 \
 openstack subnet create subnet-mgmt6 \
 --network net-mgmt6 \
 --ip-version 6 \
---subnet-range 2001::10:0/112 \
---allocation-pool start=2001::10:100,end=2001::10:200 \
+--subnet-range 2001:0:0:10:/64 \
+--allocation-pool start=2001:0:0::10::1,end=2001:0:0::10::100 \
 --gateway none 
 ```
