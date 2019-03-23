@@ -1,0 +1,15 @@
+## IPv6 Static
+
+```
+BOOTPROTO=static
+DEVICE=eth1
+HWADDR=fa:16:3e:aa:d9:19
+ONBOOT=yes
+TYPE=Ethernet
+USERCTL=no
+NM_CONTROLLED=no
+IPV6INIT=yes
+IPV6_AUTOCONF=no
+IPv6ADDR="2001:0:0:10::36/64"
+```
+
