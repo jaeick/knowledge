@@ -1,3 +1,19 @@
+## IPv4 Static
+```
+BOOTPROTO=static
+DEVICE=eth1
+HWADDR=fa:16:3e:aa:d9:19
+ONBOOT=yes
+TYPE=Ethernet
+USERCTL=no
+NM_CONTROLLED=no
+IPADDR=10.1.1.1
+NETMKASK=255.255.255.0
+GATEWAY=10.1.1.254
+DNS1=8.8.8.8
+DNS2=8.8.4.4
+```
+
 ## IPv6 Static
 
 ```
@@ -10,6 +26,11 @@ USERCTL=no
 NM_CONTROLLED=no
 IPV6INIT=yes
 IPV6_AUTOCONF=no
-IPv6ADDR="2001:0:0:10::36/64"
+IPv6ADDR=2001:0:0:10::36/64
+IPV6_DEFAULTGW=2001:0:0:10::1
 ```
 
+## restart 
+```
+# systemctl restart network
+```
