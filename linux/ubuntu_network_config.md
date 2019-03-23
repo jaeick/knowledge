@@ -1,4 +1,4 @@
-h1. IPv4 static
+## IPv4 static
 ```
 auto ens33
 iface ens33 inet static
@@ -8,7 +8,7 @@ iface ens33 inet static
   dns-nameservers 8.8.8.8 8.8.4.4
 ```
 
-h2. IPv6 Static
+## IPv6 Static
 ```
 auto ens4
 iface ens4 inet6 static
@@ -18,7 +18,7 @@ iface ens4 inet6 static
   gateway 2001:0:0:10::1
 ```
 
-h2. restart
+## restart
 ```
 # systemctl restart networking
 ```
