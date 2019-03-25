@@ -1,6 +1,6 @@
 ```
 openstack server create paf-1\
---user-data userdata \
+--user-data userdata.yaml \
 --image centos7 \
 --flavor m1.small \
 --security-group bd6224ce-46fa-400e-9298-8c0c8d36d791 \
