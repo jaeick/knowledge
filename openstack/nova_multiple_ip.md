@@ -1,5 +1,5 @@
 ```
-openstack server create paf-1\
+openstack server create paf-1 \
 --user-data userdata.yaml \
 --image centos7 \
 --flavor m1.small \
