@@ -66,3 +66,8 @@ baseurl = http://[2001:0:0:10::35]/yum.postgresql.org/10/redhat/rhel-7-x86_64
 enabled = 1
 gpgcheck = 0
 ```
+
+## client에서 repo 확인
+```
+# yum repolist
+```
