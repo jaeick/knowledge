@@ -7,11 +7,13 @@
 --nic net-id=net-provider1,v4-fixed-ip=10.55.195.37
 ```
 
-** careate speicifc host
+## careate instance to speicifc host
 ```
 $ openstack server create SERVER \
 --image IMAGE \
 --flavor m1.tiny \
 --availability-zone ZONE:HOST:NODE \
 --nic net-id=UUID 
+
+use the ZONE::NODE, ZONE:HOST or ZONE
 ```
