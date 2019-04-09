@@ -17,3 +17,30 @@ $ openstack server create SERVER \
 
 use the ZONE::NODE, ZONE:HOST or ZONE
 ```
+
+```
+$ openstack availability zone list
++-----------+-------------+
+| Zone Name | Zone Status |
++-----------+-------------+
+| zone1     | available   |
+| zone2     | available   |
++-----------+-------------+
+
+$ openstack host list
++----------------+-------------+----------+
+| Host Name      | Service     | Zone     |
++----------------+-------------+----------+
+| compute01      | compute     | nova     |
+| compute02      | compute     | nova     |
++----------------+-------------+----------+
+
+$ openstack hypervisor list
++----+---------------------+
+| ID | Hypervisor Hostname |
++----+---------------------+
+|  1 | server2             |
+|  2 | server3             |
+|  3 | server4             |
++----+---------------------+
+```
